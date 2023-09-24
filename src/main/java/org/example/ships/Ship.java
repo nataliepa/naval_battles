@@ -10,6 +10,7 @@ public abstract class Ship {
     private final Field field;
     private Location start;
     private ShipDirection dir;
+    private int hits = 0;
 
     public Ship (int shipLength, int points, char letter, Field field, Location start, ShipDirection dir) {
         this.shipLength = shipLength;
@@ -52,19 +53,23 @@ public abstract class Ship {
         this.dir = dir;
     }
 
-    public void hit(){}
+    public void hit(){
+        hits++;
+    }
 
     public boolean isHit() {
-        return true;
+        return hits > 0;
     }
 
     public boolean isSinking() {
-        return true;
+        return hits == shipLength;
     }
 
     public String getHitMessage() {
-        return "";
+        return "You hit a ship!";
     }
+
+    public abstract String getSinkMessage();
 
     public void threaten() {}
 

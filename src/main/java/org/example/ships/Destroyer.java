@@ -9,4 +9,8 @@ public class Destroyer extends Ship{
         super(3, 2, 'D', field, start, dir);
     }
 
+    @Override
+    public String getSinkMessage() {
+        return "You sank a Destroyer";
+    }
 }

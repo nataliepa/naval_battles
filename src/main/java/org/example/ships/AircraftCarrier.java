@@ -8,4 +8,9 @@ public class AircraftCarrier extends Ship{
         super(5, 5, 'A', field, start, dir);
     }
 
+
+    @Override
+    public String getSinkMessage() {
+        return "You sank an AircraftCarrier";
+    }
 }

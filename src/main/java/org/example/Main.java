@@ -13,7 +13,6 @@ public class Main {
         game.init(in);
 
         System.out.println(game.getMovesNum());
-        System.out.println();
         game.play();
 
 

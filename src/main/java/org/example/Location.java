@@ -46,7 +46,10 @@ public class Location {
     }
 
     public void mark() {
-
+        marked = true;
+        if(ship != null) {
+            ship.hit();
+        }
     }
 
     public boolean isMarked() {
@@ -58,7 +61,7 @@ public class Location {
     }
 
     public boolean isHit() {
-        return true;
+        return ship != null && isMarked();
     }
 
 }

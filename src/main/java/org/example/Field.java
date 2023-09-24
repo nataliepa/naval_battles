@@ -1,8 +1,10 @@
 package org.example;
 
+import org.example.Exceptions.InvalidLocationException;
 import org.example.players.Player;
 import org.example.ships.AircraftCarrier;
 import org.example.ships.Ship;
+import org.example.ships.ShipDirection;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -59,61 +61,109 @@ public class Field {
         this.player = player;
     }
 
+    public Location getLocation(int r, int c) {
+        return locations[r][c];
+    }
+
+    public Location getLocation(String locString) throws InvalidLocationException {
+
+        if(!locString.matches("^[a-zA-Z]\\d{1,2}$")) {
+            System.out.println("Input cannot be translated to location..");
+            throw new InvalidLocationException();
+        }
+
+        int row = locString.toUpperCase().charAt(0) - 'A';
+        int column = Integer.parseInt(locString.substring(1));
+
+        if(row < 0 || row >= numRows) {
+            System.out.println("Row is out of bounds");
+            throw new InvalidLocationException();
+        }
+
+        if(column < 0 || column >= numCols) {
+            System.out.println("Column is out of bounds");
+            throw new InvalidLocationException();
+        }
+
+        return locations[row][column];
+    }
+
     public boolean placeShipRandomly(Ship s, int maxTries, boolean checkMarked) {
         Random rand = new Random();
+        boolean placed = false;
+        int tries = 0;
 
-        int randomRow;
-        int randomColumn;
-        int shipDirection; // 0: Horizontal 1: Vertical
-        boolean canBePlaced;
+        while(true){
+            s.setStart(new Location(rand.nextInt(numRows), rand.nextInt(numCols), s, false));
+            placed = placeShip(s, checkMarked);
+            tries++;
 
-        while(true) {
-            randomRow = rand.nextInt(numRows);
-            randomColumn = rand.nextInt(numCols);
-            shipDirection = rand.nextInt(2);
-            canBePlaced = true;
-            // place ship horizontally
-            if (shipDirection == 0) {
-                // try to place ship horizontally (right)
-                if (randomColumn + s.getShipLength() < numCols) {
-                    for (int j = randomColumn; j < randomColumn + s.getShipLength(); j++) {
-                        if (!locations[randomRow][j].isEmpty()) {
-                            canBePlaced = false;
-                        }
-                    }
-                    if (canBePlaced) {
-                        s.setStart(new Location(randomRow, randomColumn, s, false));
-                        for (int j = randomColumn; j < randomColumn + s.getShipLength(); j++) {
-                            locations[randomRow][j].setShip(s);
-                        }
-                        return true;
-                    }
-                }
-
-            } else {
-                // try to place ship vertically (top-down)
-                if (randomRow + s.getShipLength() < numRows) {
-                    for (int j = randomRow; j < randomRow + s.getShipLength(); j++) {
-                        if (!locations[j][randomColumn].isEmpty()) {
-                            canBePlaced = false;
-                        }
-                    }
-                    if (canBePlaced) {
-                        s.setStart(new Location(randomRow, randomColumn, s, false));
-                        for (int j = randomRow; j < randomRow + s.getShipLength(); j++) {
-                            locations[j][randomColumn].setShip(s);
-                        }
-                        return true;
-                    }
-                }
-
-            }
+            if(placed) return true;
+            if(maxTries !=0 && tries > maxTries) return false;
         }
+
     }
 
     public boolean placeShip(Ship s, boolean checkMarked) {
 
+        if(checkMarked && s.isHit()) {
+            System.out.println("Ship cannot be moved.");
+            return false;
+        }
+
+        if(s.getDir() == ShipDirection.HORIZONTAL) {
+            // check if the whole ship can fit in the table
+            if(s.getStart().getColumn() + s.getShipLength() > numRows) {
+                System.out.println("Ship can not be placed. Horizontally out of bounds.");
+                return false;
+            }
+            // check if there is no other ship in these locations
+            for (int i = s.getStart().getColumn(); i < s.getStart().getColumn() + s.getShipLength(); i++) {
+                if (!locations[s.getStart().getRow()][i].isEmpty()) {
+                    return false;
+                }
+            }
+            // place ship
+            for (int i = s.getStart().getColumn(); i < s.getStart().getColumn() + s.getShipLength(); i++) {
+                locations[s.getStart().getRow()][i].setShip(s);
+            }
+        } else {
+            // check if the whole ship can fit in the table
+            if(s.getStart().getRow() + s.getShipLength() > numCols) {
+                System.out.println("Ship can not be placed. Vertically out of bounds.");
+                return false;
+            }
+            // check if there is no other ship in these locations
+            for (int i = s.getStart().getRow(); i < s.getStart().getRow() + s.getShipLength(); i++) {
+                if (!locations[i][s.getStart().getColumn()].isEmpty()) {
+                    return false;
+                }
+            }
+            // place ship
+            for (int i = s.getStart().getRow(); i < s.getStart().getRow() + s.getShipLength(); i++) {
+                locations[i][s.getStart().getColumn()].setShip(s);
+            }
+        }
+
+        System.out.println("Ship is placed!");
         return true;
+    }
+
+    public void removeShip(Ship s) {
+
+        if(s.getDir() == ShipDirection.HORIZONTAL) {
+            for (int i = s.getStart().getColumn(); i < s.getStart().getColumn() + s.getShipLength(); i++) {
+                locations[s.getStart().getRow()][i].setShip(null);
+            }
+        } else {
+            for (int i = s.getStart().getRow(); i < s.getStart().getRow() + s.getShipLength(); i++) {
+                locations[i][s.getStart().getColumn()].setShip(null);
+            }
+        }
+    }
+
+    public void processValidMove(Location moveLoc) {
+
     }
 
     @Override

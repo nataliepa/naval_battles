@@ -31,7 +31,7 @@ public class HumanPlayer extends Player{
             }
         }
 
-        ArrayList<Ship> ships = new ArrayList<>();
+        ArrayList<Ship> ships = new ArrayList<>(7);
 
         ships.add(new AircraftCarrier(otherField, null, null));
         ships.add(new AircraftCarrier(otherField, null, null));
