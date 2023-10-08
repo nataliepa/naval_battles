@@ -1,7 +1,10 @@
 package org.example.players;
 
+import org.example.Exceptions.InvalidLocationException;
 import org.example.Field;
 import org.example.Location;
+
+import java.util.Scanner;
 
 public abstract class Player {
     private String name;
@@ -48,7 +51,5 @@ public abstract class Player {
         return true;
     }
 
-    public Location selectMove() {
-        return new Location();
-    }
+    public abstract Location selectMove() throws InvalidLocationException;
 }

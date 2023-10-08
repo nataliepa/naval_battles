@@ -3,10 +3,13 @@ package org.example.Exceptions;
 import org.example.Command;
 
 public class MoveIsCommandException extends InvalidLocationException {
+    Command command;
 
-    public void MoveIsCommandException(Command cmd) {}
+    public MoveIsCommandException(Command cmd) {
+        command = cmd;
+    }
 
-    public void getCommand() {}
-
-
+    public Command getCommand() {
+        return command;
+    }
 }

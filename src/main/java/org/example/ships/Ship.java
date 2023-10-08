@@ -57,6 +57,10 @@ public abstract class Ship {
         hits++;
     }
 
+    public int getHits() {
+        return hits;
+    }
+
     public boolean isHit() {
         return hits > 0;
     }
@@ -65,9 +69,7 @@ public abstract class Ship {
         return hits == shipLength;
     }
 
-    public String getHitMessage() {
-        return "You hit a ship!";
-    }
+    public abstract String getHitMessage();
 
     public abstract String getSinkMessage();
 

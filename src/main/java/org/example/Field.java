@@ -2,11 +2,9 @@ package org.example;
 
 import org.example.Exceptions.InvalidLocationException;
 import org.example.players.Player;
-import org.example.ships.AircraftCarrier;
 import org.example.ships.Ship;
 import org.example.ships.ShipDirection;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Field {
@@ -24,7 +22,7 @@ public class Field {
         locations = new Location[numRows][numCols];
         for(int i=0; i<numRows; i++) {
             for(int j=0; j<numCols; j++) {
-                locations[i][j] = new Location(numRows, numCols, null, false);
+                locations[i][j] = new Location(i, j, null, false);
             }
         }
     }
@@ -80,18 +78,19 @@ public class Field {
             throw new InvalidLocationException();
         }
 
-        if(column < 0 || column >= numCols) {
+        if(column < 1 || column > numCols) {
             System.out.println("Column is out of bounds");
             throw new InvalidLocationException();
         }
 
-        return locations[row][column];
+        return locations[row][column - 1];
     }
 
     public boolean placeShipRandomly(Ship s, int maxTries, boolean checkMarked) {
         Random rand = new Random();
         boolean placed = false;
         int tries = 0;
+        // TODO: set ship direction
 
         while(true){
             s.setStart(new Location(rand.nextInt(numRows), rand.nextInt(numCols), s, false));
@@ -163,7 +162,18 @@ public class Field {
     }
 
     public void processValidMove(Location moveLoc) {
+        moveLoc.mark();
 
+        if(moveLoc.getShip().getHits() == moveLoc.getShip().getShipLength()) {
+            System.out.println(moveLoc.getShip().getSinkMessage());
+            return;
+        }
+
+        if(moveLoc.isHit()) {
+            System.out.println(moveLoc.getShip().getHitMessage());
+        }
+
+        // TODO: check if a ship is threaten
     }
 
     @Override
@@ -189,7 +199,7 @@ public class Field {
             for(int j=0; j<numCols; j++) {
                 if (!locations[i][j].isMarked()) {
                     field.append(".  ");
-                } else if (locations[i][j].isMarked()) {
+                } else {
                     if (locations[i][j].getShip() == null) {
                         field.append("o ");
                     } else {
@@ -208,25 +218,31 @@ public class Field {
 
         field.append("    ");
         for(int i=0; i<numRows; i++) {
-            field.append(i + 1 + "  ");
+            field.append(i + 1).append("  ");
         }
 
         field.append("\n");
         field.append("   ");
-        for(int i=0; i<numRows; i++) {
-            field.append("---");
-        }
+        field.append("---".repeat(Math.max(0, numRows)));
         field.append("\n");
 
         char c = 'A';
 
         for(int i=0; i<numRows; i++) {
-            field.append(c++ + " | ");
+            field.append(c++).append(" | ");
             for(int j=0; j<numCols; j++) {
-                if (!locations[i][j].isEmpty()) {
-                    field.append(locations[i][j].getShip().getLetter()+ "  ");
+                if (!locations[i][j].isMarked()) {
+                    if (locations[i][j].getShip() == null) {
+                        field.append(".  ");
+                    } else {
+                        field.append(locations[i][j].getShip().getLetter()).append("  ");
+                    }
                 } else {
-                    field.append(".  ");
+                    if (locations[i][j].getShip() == null) {
+                        field.append("o  ");
+                    } else {
+                        field.append("x").append(locations[i][j].getShip().getLetter()).append(" ");
+                    }
                 }
             }
             field.append("\n");

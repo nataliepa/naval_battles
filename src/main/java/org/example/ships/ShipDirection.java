@@ -24,7 +24,7 @@ public enum ShipDirection {
      */
     VERTICAL;
 
-    public ShipDirection fromString(String dirString) {
+    public static ShipDirection fromString(String dirString) {
         if(dirString.matches("[H|h]\\w*")) {
             return ShipDirection.HORIZONTAL;
         } else if((dirString.matches("[V|v]\\w*"))) {

@@ -13,4 +13,7 @@ public class AircraftCarrier extends Ship{
     public String getSinkMessage() {
         return "You sank an AircraftCarrier";
     }
+
+    @Override
+    public String getHitMessage() { return "You hit an AircraftCarrier";}
 }

@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.Exceptions.InvalidLocationException;
+import org.example.Exceptions.MoveIsCommandException;
 import org.example.players.ComputerPlayer;
 import org.example.players.HumanPlayer;
 import org.example.players.Player;
@@ -137,8 +139,6 @@ public class Game {
         int randomValue = rand.nextInt(2);
         System.out.println("Random value = " + randomValue);
 
-        placeShips();
-
         while (movesNum != 0) {
             if(randomValue == 0) {
                 player = player1;
@@ -147,8 +147,26 @@ public class Game {
                 player = player2;
                 randomValue = 0;
             }
+
             System.out.println(player.getName() + " it's your turn!");
             System.out.println(player.getField().toStringWithShips());
+            while(true) {
+                try {
+                    Location location = player.selectMove();
+                    System.out.println(location.getColumn()+ " " + location.getRow());
+                    if(!player.getField().getLocation(location.getRow(), location.getColumn()).isMarked()) {
+                        player.getField().processValidMove(location);
+                        break;
+                    } else {
+                        System.out.println("You have already chosen this location in a previous move");
+                    }
+                } catch (MoveIsCommandException e) {
+                    System.out.println(e.getCommand());
+                } catch (InvalidLocationException ignored) {}
+            }
+
+
+
             movesNum--;
         }
     }

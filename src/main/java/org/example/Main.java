@@ -12,9 +12,12 @@ public class Main {
 
         game.init(in);
 
+        game.placeShips();
+
         System.out.println(game.getMovesNum());
         game.play();
 
+        in.close();
 
     }
 }
