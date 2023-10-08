@@ -4,3 +4,5 @@ target/*
 ## target folder at any level of the project structue
 **/target
 /target
+
+*.class
