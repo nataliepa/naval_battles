@@ -94,6 +94,7 @@ public class Field {
 
         while(true){
             s.setStart(new Location(rand.nextInt(numRows), rand.nextInt(numCols), s, false));
+            s.setDir(rand.nextInt(2) == 0 ? ShipDirection.HORIZONTAL : ShipDirection.VERTICAL);
             placed = placeShip(s, checkMarked);
             tries++;
 
@@ -164,14 +165,18 @@ public class Field {
     public void processValidMove(Location moveLoc) {
         moveLoc.mark();
 
-        if(moveLoc.getShip().getHits() == moveLoc.getShip().getShipLength()) {
-            System.out.println(moveLoc.getShip().getSinkMessage());
-            return;
+        if(!moveLoc.isEmpty()){
+
+            if(moveLoc.isHit()) {
+                System.out.println(moveLoc.getShip().getHitMessage());
+            }
+
+            if(moveLoc.getShip().getHits() == moveLoc.getShip().getShipLength()) {
+                System.out.println(moveLoc.getShip().getSinkMessage());
+                player.setScore(player.getScore() + moveLoc.getShip().getPoints());
+            }
         }
 
-        if(moveLoc.isHit()) {
-            System.out.println(moveLoc.getShip().getHitMessage());
-        }
 
         // TODO: check if a ship is threaten
     }

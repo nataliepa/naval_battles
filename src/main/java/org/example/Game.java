@@ -89,7 +89,7 @@ public class Game {
 
         while (true) {
             try {
-                movesNum = in.nextInt();
+                movesNum = 2 * in.nextInt();
                 break;
             } catch (InputMismatchException e) {
                 in.nextLine();
@@ -123,6 +123,7 @@ public class Game {
             }
         }
         player.initField(rowsNum, columnsNum);
+        player.getField().setPlayer(player);
 
         return player;
     }
@@ -154,19 +155,20 @@ public class Game {
                 try {
                     Location location = player.selectMove();
                     System.out.println(location.getColumn()+ " " + location.getRow());
-                    if(!player.getField().getLocation(location.getRow(), location.getColumn()).isMarked()) {
+                    if(player.getField().getLocation(location.getRow(), location.getColumn()).isMarked()) {
+                        System.out.println("You have already chosen this location in a previous move");
+                    } else {
                         player.getField().processValidMove(location);
                         break;
-                    } else {
-                        System.out.println("You have already chosen this location in a previous move");
                     }
                 } catch (MoveIsCommandException e) {
                     System.out.println(e.getCommand());
                 } catch (InvalidLocationException ignored) {}
             }
-
-
-
+            if(player.hasWon()) {
+                System.out.println(player.getName() + " is the winner!");
+                System.exit(0);
+            }
             movesNum--;
         }
     }

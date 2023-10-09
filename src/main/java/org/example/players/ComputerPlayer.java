@@ -8,6 +8,7 @@ import org.example.ships.Ship;
 import org.example.ships.Submarine;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ComputerPlayer extends Player{
@@ -35,6 +36,8 @@ public class ComputerPlayer extends Player{
 
     @Override
     public Location selectMove() {
-        return null;
+        Random rand = new Random();
+
+        return field.getLocation(rand.nextInt(field.getNumRows()), rand.nextInt(field.getNumCols()));
     }
 }

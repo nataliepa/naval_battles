@@ -48,7 +48,7 @@ public abstract class Player {
     public abstract void placeShips(Field otherField);
 
     public boolean hasWon() {
-        return true;
+        return score == 22;
     }
 
     public abstract Location selectMove() throws InvalidLocationException;
