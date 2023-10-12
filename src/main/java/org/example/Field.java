@@ -9,7 +9,7 @@ import org.example.ships.Submarine;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.SortedMap;
+
 
 public class Field implements Serializable {
     private int numRows;
@@ -35,24 +35,8 @@ public class Field implements Serializable {
         return numRows;
     }
 
-    public void setNumRows(int numRows) {
-        this.numRows = numRows;
-    }
-
     public int getNumCols() {
         return numCols;
-    }
-
-    public void setNumCols(int numCols) {
-        this.numCols = numCols;
-    }
-
-    public Location[][] getLocations() {
-        return locations;
-    }
-
-    public void setLocations(Location[][] locations) {
-        this.locations = locations;
     }
 
     public Player getPlayer() {
@@ -92,7 +76,7 @@ public class Field implements Serializable {
 
     public boolean placeShipRandomly(Ship s, int maxTries, boolean checkMarked) {
         Random rand = new Random();
-        boolean placed = false;
+        boolean placed;
         int tries = 0;
 
         if(checkMarked && s instanceof Submarine && s.isHit()) return false;
@@ -242,20 +226,18 @@ public class Field implements Serializable {
 
         field.append("    ");
         for(int i=0; i<numRows; i++) {
-            field.append(i + 1 + "  ");
+            field.append(i + 1).append("  ");
         }
 
         field.append("\n");
         field.append("   ");
-        for(int i=0; i<numRows; i++) {
-            field.append("---");
-        }
+        field.append("---".repeat(Math.max(0, numRows)));
         field.append("\n");
 
         char c = 'A';
 
         for(int i=0; i<numRows; i++) {
-            field.append(c++ + " | ");
+            field.append(c++).append(" | ");
             for(int j=0; j<numCols; j++) {
                 if (!locations[i][j].isMarked()) {
                     field.append(".  ");

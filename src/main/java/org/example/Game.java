@@ -23,45 +23,6 @@ public class Game implements Serializable {
 
     private boolean gameLoadedFromFile = false;
 
-    public int getRowsNum() {
-        return rowsNum;
-    }
-
-    public void setRowsNum(int rowsNum) {
-        this.rowsNum = rowsNum;
-    }
-
-    public int getColumnsNum() {
-        return columnsNum;
-    }
-
-    public void setColumnsNum(int columnsNum) {
-        this.columnsNum = columnsNum;
-    }
-
-    public int getMovesNum() {
-        return movesNum;
-    }
-
-    public void setMovesNum(int movesNum) {
-        this.movesNum = movesNum;
-    }
-
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    public void setPlayer1(Player player1) {
-        this.player1 = player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
-    }
-
-    public void setPlayer2(Player player2) {
-        this.player2 = player2;
-    }
 
     public int initFieldDimensions(Scanner in, String dimension) {
         while(true) {

@@ -23,16 +23,8 @@ public class Location implements Serializable {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getColumn() {
         return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
     public Ship getShip() {
@@ -41,10 +33,6 @@ public class Location implements Serializable {
 
     public void setShip(Ship ship) {
         this.ship = ship;
-    }
-
-    public void setMarked(boolean marked) {
-        this.marked = marked;
     }
 
     public void mark() {

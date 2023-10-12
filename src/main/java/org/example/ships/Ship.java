@@ -35,10 +35,6 @@ public abstract class Ship implements Serializable {
         return letter;
     }
 
-    public Field getField() {
-        return field;
-    }
-
     public Location getStart() {
         return start;
     }
@@ -57,10 +53,6 @@ public abstract class Ship implements Serializable {
 
     public void hit(){
         hits++;
-    }
-
-    public int getHits() {
-        return hits;
     }
 
     public boolean isHit() {
