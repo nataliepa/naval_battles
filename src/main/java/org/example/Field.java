@@ -16,9 +16,7 @@ public class Field implements Serializable {
     private int numCols;
     private Location[][] locations;
     private Player player;
-
     public Field() {}
-
     public Field(int numRows, int numCols, Player player) {
         this.numRows = numRows;
         this.numCols = numCols;

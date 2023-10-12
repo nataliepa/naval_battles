@@ -23,7 +23,7 @@ public class Game implements Serializable {
     private boolean gameLoadedFromFile = false;
 
 
-    public int initFieldDimensions(Scanner in, String dimension) {
+    private int initFieldDimensions(Scanner in, String dimension) {
         while(true) {
             System.out.print("Enter number of " + dimension + "[10-15]: ");
             try {
@@ -125,7 +125,7 @@ public class Game implements Serializable {
         player2.placeShips(player1.getField());
     }
 
-    public boolean commandToBeExecuted(Command command) {
+    private boolean commandToBeExecuted(Command command) {
         Scanner in = new Scanner(System.in);
 
         while (true) {
@@ -142,7 +142,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void executeHelpCommand() {
+    private void executeHelpCommand() {
         for(Command c : Command.values()) {
             if(c == Command.HELP) {
                 System.out.println(c.getHelpText());
@@ -153,7 +153,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void executeSaveCommand() {
+    private void executeSaveCommand() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("gameFile.txt"))) {
             oos.writeObject(this);
             System.out.println("Game successfully saved");
@@ -162,7 +162,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void executeLoadCommand() {
+    private void executeLoadCommand() {
 
         try (ObjectInputStream oi = new ObjectInputStream(new FileInputStream("gameFile.txt"))) {
             Game game =  (Game) oi.readObject();
@@ -180,12 +180,12 @@ public class Game implements Serializable {
         }
     }
 
-    public void executeExitCommand() {
+    private void executeExitCommand() {
         System.out.println("Exiting the game...");
         System.exit(0);
     }
 
-    public void executeCommand(Command command) {
+    private void executeCommand(Command command) {
         if(command == Command.HELP) {
             executeHelpCommand();
         } else if(command == Command.SAVE) {
@@ -197,7 +197,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void playRound(Player player) {
+    private void playRound(Player player) {
         currentPlayer = player;
         System.out.println(TextColor.YELLOW.getTextColor() + player.getName() + " it's your turn!\n" + TextColor.RESET.getTextColor());
         System.out.println(player.getField().toStringWithShips());
@@ -262,7 +262,7 @@ public class Game implements Serializable {
         }
     }
 
-    public void showResult() {
+    private void showResult() {
         System.out.println("\n\n---------------------------------");
         if(player1.getScore() == player2.getScore()) {
             System.out.println("Game ended in a draw!");
