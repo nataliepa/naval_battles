@@ -20,7 +20,6 @@ public class Game implements Serializable {
     private Player player1;
     private Player player2;
     private Player currentPlayer;
-
     private boolean gameLoadedFromFile = false;
 
 
@@ -214,9 +213,11 @@ public class Game implements Serializable {
                     break;
                 }
             } catch (MoveIsCommandException e) {
-                if(commandToBeExecuted(e.getCommand())) {
+                if(e.getCommand() == Command.HELP) {
                     executeCommand(e.getCommand());
-                    if(e.getCommand() == Command.LOAD) break;
+                } else if(commandToBeExecuted(e.getCommand())) {
+                    executeCommand(e.getCommand());
+                    if(e.getCommand() == Command.LOAD) return;
                 }
             } catch (InvalidLocationException ignored) {}
         }
