@@ -11,11 +11,28 @@ public class Destroyer extends Ship{
 
     @Override
     public String getSinkMessage() {
-        return "You sank a Destroyer";
+        return "You sank a Destroyer!";
     }
 
     @Override
     public String getHitMessage() {
-        return "You hit a Destroyer";
+        return "You hit a Destroyer!";
+    }
+
+    @Override
+    public void threaten() {
+        Location previousLocation = this.getStart();
+        ShipDirection previousShipDirection = this.getDir();
+
+        if(!this.isHit()) {
+            field.removeShip(this);
+
+            if(!field.placeShipRandomly(this, 1, true)) {
+                this.setStart(previousLocation);
+                this.setDir(previousShipDirection);
+                System.out.println("Ship could not be placed to another location");
+                field.placeShip(this, false);
+            }
+        }
     }
 }

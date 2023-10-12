@@ -3,11 +3,13 @@ package org.example.ships;
 import org.example.Field;
 import org.example.Location;
 
-public abstract class Ship {
+import java.io.Serializable;
+
+public abstract class Ship implements Serializable {
     private final int shipLength;
     private final int points;
     private final char letter;
-    private final Field field;
+    protected final Field field;
     private Location start;
     private ShipDirection dir;
     private int hits = 0;
@@ -73,6 +75,6 @@ public abstract class Ship {
 
     public abstract String getSinkMessage();
 
-    public void threaten() {}
+    public abstract void threaten();
 
 }

@@ -2,7 +2,9 @@ package org.example;
 
 import org.example.ships.Ship;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     private int row;
     private int column;
     private Ship ship;

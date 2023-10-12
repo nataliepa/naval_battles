@@ -37,7 +37,6 @@ public class ComputerPlayer extends Player{
     @Override
     public Location selectMove() {
         Random rand = new Random();
-
         return field.getLocation(rand.nextInt(field.getNumRows()), rand.nextInt(field.getNumCols()));
     }
 }

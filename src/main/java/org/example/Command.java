@@ -3,10 +3,10 @@ package org.example;
 import java.util.InputMismatchException;
 
 public enum Command {
-    HELP("help", "Available commands: save, load, exit"),
-    SAVE("save", "saves the game in its current text"),
-    LOAD("load", "loads a saved game"),
-    EXIT("exit", "terminates the game");
+    HELP("HELP", "Μoves are introduced in the form of \"A5\", \"C13\" etc.\n\nAvailable Commands:"),
+    SAVE("SAVE", "Saves the game in its current state"),
+    LOAD("LOAD", "Loads a saved game"),
+    EXIT("EXIT", "Terminates the game");
 
     private final String commandString;
     private final String helpText;

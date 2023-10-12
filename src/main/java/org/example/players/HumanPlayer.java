@@ -5,6 +5,7 @@ import org.example.Exceptions.InvalidLocationException;
 import org.example.Exceptions.MoveIsCommandException;
 import org.example.Field;
 import org.example.Location;
+import org.example.TextColor;
 import org.example.ships.*;
 
 import java.util.ArrayList;
@@ -16,23 +17,25 @@ public class HumanPlayer extends Player{
         super(name, score, field);
     }
 
-    public static final int AUTOMATICALLY = 0;
-    public static final int MANUALLY = 1;
-    //Scanner in = new Scanner(System.in);
+    public static final int AUTOMATICALLY = 1;
+    public static final int MANUALLY = 2;
+
     @Override
     public void placeShips(Field otherField) {
         Scanner in = new Scanner(System.in);
         int choice;
 
         while(true) {
-            System.out.println("Choose how you want to place your ships [0:automatically/1:manually]");
+            System.out.println(TextColor.YELLOW.getTextColor() + field.getPlayer().getName() + TextColor.RESET.getTextColor() +
+                    " choose how you want to place your ships\n1. Automatically\n2. Manually");
             try {
-                do{
-                    choice = Integer.parseInt(in.nextLine());
-                }while(choice != AUTOMATICALLY && choice != MANUALLY);
+                choice = Integer.parseInt(in.next());
+                if (choice != AUTOMATICALLY && choice != MANUALLY) throw new InputMismatchException();
                 break;
-            } catch (Exception e) {
-                System.out.println("Wrong input! Enter an integer!");
+            } catch (NumberFormatException e) {
+                System.out.println(TextColor.RED.getTextColor() + "Input is not an integer" + TextColor.RESET.getTextColor());
+            } catch (InputMismatchException e) {
+                System.out.println(TextColor.RED.getTextColor() + "Input must be between 1 or 2" + TextColor.RESET.getTextColor());
             }
         }
 
@@ -95,7 +98,7 @@ public class HumanPlayer extends Player{
         Scanner in = new Scanner(System.in);
         Command moveCommand = Command.HELP;
 
-        System.out.println("Enter your move");
+        System.out.print("Enter your move: ");
         move = in.next();
 
         try {

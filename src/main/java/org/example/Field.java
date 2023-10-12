@@ -4,10 +4,14 @@ import org.example.Exceptions.InvalidLocationException;
 import org.example.players.Player;
 import org.example.ships.Ship;
 import org.example.ships.ShipDirection;
+import org.example.ships.Submarine;
 
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.SortedMap;
 
-public class Field {
+public class Field implements Serializable {
     private int numRows;
     private int numCols;
     private Location[][] locations;
@@ -90,7 +94,8 @@ public class Field {
         Random rand = new Random();
         boolean placed = false;
         int tries = 0;
-        // TODO: set ship direction
+
+        if(checkMarked && s instanceof Submarine && s.isHit()) return false;
 
         while(true){
             s.setStart(new Location(rand.nextInt(numRows), rand.nextInt(numCols), s, false));
@@ -99,7 +104,7 @@ public class Field {
             tries++;
 
             if(placed) return true;
-            if(maxTries !=0 && tries > maxTries) return false;
+            if(maxTries !=0 && tries >= maxTries) return false;
         }
 
     }
@@ -107,7 +112,13 @@ public class Field {
     public boolean placeShip(Ship s, boolean checkMarked) {
 
         if(checkMarked && s.isHit()) {
-            System.out.println("Ship cannot be moved.");
+            System.out.println(s.getClass().getSimpleName() + " cannot be moved.");
+            //if(s instanceof Submarine) System.exit(0);
+            return false;
+        }
+
+        if(s.getStart().isMarked()) {
+            System.out.println(s.getClass().getSimpleName() + " cannot be moved.");
             return false;
         }
 
@@ -119,7 +130,9 @@ public class Field {
             }
             // check if there is no other ship in these locations
             for (int i = s.getStart().getColumn(); i < s.getStart().getColumn() + s.getShipLength(); i++) {
-                if (!locations[s.getStart().getRow()][i].isEmpty()) {
+                if (!locations[s.getStart().getRow()][i].isEmpty() || locations[s.getStart().getRow()][i].isMarked()) {
+                    System.out.println("Ship can not be placed. A location is marked. Or there is another ship." + "row = " + s.getStart().getRow()
+                            + " column = " + s.getStart().getColumn() + " direction = " + s.getDir());
                     return false;
                 }
             }
@@ -135,7 +148,9 @@ public class Field {
             }
             // check if there is no other ship in these locations
             for (int i = s.getStart().getRow(); i < s.getStart().getRow() + s.getShipLength(); i++) {
-                if (!locations[i][s.getStart().getColumn()].isEmpty()) {
+                if (!locations[i][s.getStart().getColumn()].isEmpty() || locations[i][s.getStart().getColumn()].isMarked()) {
+                    System.out.println("Ship can not be placed. A location is marked. Or there is another ship." + "row = " + s.getStart().getRow()
+                            + "column = " + s.getStart().getColumn() + "direction = " + s.getDir());
                     return false;
                 }
             }
@@ -163,22 +178,62 @@ public class Field {
     }
 
     public void processValidMove(Location moveLoc) {
+
+        HashSet<Ship> ships = new HashSet<>();
+
         moveLoc.mark();
 
-        if(!moveLoc.isEmpty()){
-
-            if(moveLoc.isHit()) {
-                System.out.println(moveLoc.getShip().getHitMessage());
-            }
-
-            if(moveLoc.getShip().getHits() == moveLoc.getShip().getShipLength()) {
-                System.out.println(moveLoc.getShip().getSinkMessage());
+        if(moveLoc.isHit()) {
+            if(moveLoc.getShip().isSinking()) {
+                System.out.println(TextColor.PURPLE.getTextColor() + moveLoc.getShip().getSinkMessage() + TextColor.RESET.getTextColor());
                 player.setScore(player.getScore() + moveLoc.getShip().getPoints());
+            } else {
+                System.out.println(TextColor.PURPLE.getTextColor() + moveLoc.getShip().getHitMessage() + TextColor.RESET.getTextColor());
+            }
+            ships.add(moveLoc.getShip());
+        } else {
+            System.out.println(TextColor.PURPLE.getTextColor() + "You hit an empty location..." + TextColor.RESET.getTextColor());
+        }
+        // check 4 locations up
+        for(int i = moveLoc.getRow() - 1; i>= (Math.max(moveLoc.getRow() - 4, 0)); i--) {
+            if(!locations[i][moveLoc.getColumn()].isEmpty()) {
+                Ship s = locations[i][moveLoc.getColumn()].getShip();
+                if(!ships.contains(s)) {
+                    ships.add(s);
+                    s.threaten();
+                }
             }
         }
-
-
-        // TODO: check if a ship is threaten
+        // check 4 locations down
+        for(int i = moveLoc.getRow() + 1; i < (Math.min(moveLoc.getRow() + 4, numRows)); i++) {
+            if(!locations[i][moveLoc.getColumn()].isEmpty()) {
+                Ship s = locations[i][moveLoc.getColumn()].getShip();
+                if(!ships.contains(s)) {
+                    ships.add(s);
+                    s.threaten();
+                }
+            }
+        }
+        // check 4 locations left
+        for(int i = moveLoc.getColumn() - 1; i >= Math.max(moveLoc.getColumn() - 4, 0); i--) {
+            if(!locations[moveLoc.getRow()][i].isEmpty()) {
+                Ship s = locations[moveLoc.getRow()][i].getShip();
+                if(!ships.contains(s)) {
+                    ships.add(s);
+                    s.threaten();
+                }
+            }
+        }
+        // check 4 location right
+        for(int i = moveLoc.getColumn() + 1; i < Math.min(moveLoc.getColumn() + 4, numCols); i++) {
+            if(!locations[moveLoc.getRow()][i].isEmpty()) {
+                Ship s = locations[moveLoc.getRow()][i].getShip();
+                if(!ships.contains(s)) {
+                    ships.add(s);
+                    s.threaten();
+                }
+            }
+        }
     }
 
     @Override

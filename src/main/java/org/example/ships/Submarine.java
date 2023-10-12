@@ -11,11 +11,19 @@ public class Submarine extends Ship{
 
     @Override
     public String getSinkMessage() {
-        return "You sank a Submarine";
+        return "You sank a Submarine!";
     }
 
     @Override
     public String getHitMessage() {
-        return "You hit a Submarine";
+        return "You hit a Submarine!";
+    }
+
+    @Override
+    public void threaten() {
+        if(!this.isHit()) {
+            field.removeShip(this);
+            field.placeShipRandomly(this, 0, true);
+        }
     }
 }
