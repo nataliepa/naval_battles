@@ -77,7 +77,7 @@ public class Field implements Serializable {
         boolean placed;
         int tries = 0;
 
-        if(checkMarked && s instanceof Submarine && s.isHit()) return false;
+        //if(checkMarked && s instanceof Submarine && s.isHit()) return false;
 
         while(true){
             s.setStart(new Location(rand.nextInt(numRows), rand.nextInt(numCols), s, false));
@@ -93,13 +93,7 @@ public class Field implements Serializable {
 
     public boolean placeShip(Ship s, boolean checkMarked) {
 
-        if(checkMarked && s.isHit()) {
-            System.out.println(s.getClass().getSimpleName() + " cannot be moved.");
-            //if(s instanceof Submarine) System.exit(0);
-            return false;
-        }
-
-        if(s.getStart().isMarked()) {
+        if(checkMarked && s.getStart().isMarked()) {
             System.out.println(s.getClass().getSimpleName() + " cannot be moved.");
             return false;
         }
@@ -112,7 +106,7 @@ public class Field implements Serializable {
             }
             // check if there is no other ship in these locations
             for (int i = s.getStart().getColumn(); i < s.getStart().getColumn() + s.getShipLength(); i++) {
-                if (!locations[s.getStart().getRow()][i].isEmpty() || locations[s.getStart().getRow()][i].isMarked()) {
+                if (!locations[s.getStart().getRow()][i].isEmpty() || checkMarked && locations[s.getStart().getRow()][i].isMarked()) {
                     System.out.println("Ship can not be placed. A location is marked. Or there is another ship." + "row = " + s.getStart().getRow()
                             + " column = " + s.getStart().getColumn() + " direction = " + s.getDir());
                     return false;
@@ -130,7 +124,7 @@ public class Field implements Serializable {
             }
             // check if there is no other ship in these locations
             for (int i = s.getStart().getRow(); i < s.getStart().getRow() + s.getShipLength(); i++) {
-                if (!locations[i][s.getStart().getColumn()].isEmpty() || locations[i][s.getStart().getColumn()].isMarked()) {
+                if (!locations[i][s.getStart().getColumn()].isEmpty() || checkMarked && locations[i][s.getStart().getColumn()].isMarked()) {
                     System.out.println("Ship can not be placed. A location is marked. Or there is another ship." + "row = " + s.getStart().getRow()
                             + "column = " + s.getStart().getColumn() + "direction = " + s.getDir());
                     return false;
